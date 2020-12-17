@@ -1,0 +1,7 @@
+speed - slider?								-
+different sorting algorythmen				-
+resize able 								- done
+colors										-
+columsCount									- 
+left/right
+top/button
