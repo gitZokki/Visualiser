@@ -2,8 +2,6 @@ package de.zokki.visualiser.Sorting;
 
 import java.awt.Color;
 
-import de.zokki.visualiser.GUI.Column;
-
 public class Sort extends AbstractSorter {
     
     public Sort() {
@@ -21,9 +19,9 @@ public class Sort extends AbstractSorter {
 		}
 		sleep();
 		columns[j].setColor(Color.RED);
-		Column.setColumns(columns);
 	    }
 	    columns[i].setColor(Color.RED);
 	}
+	finished();
     }
 }

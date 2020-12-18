@@ -2,6 +2,7 @@ package de.zokki.visualiser.GUI;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,19 +33,19 @@ public class Panel extends JPanel {
 
     private int width, height;
 
-    JButton randomiseHeight = new JButton("Randomise height");
-    JButton sort = new JButton("Sort!");
-    JComboBox<String> sortingAlgorithms = new JComboBox<String>();
-    JTextField delay = new JTextField();
-    JTextField columnCount = new JTextField();
-
+    private JButton randomiseHeight = new JButton("Randomise height");
+    private JButton sort = new JButton("Sort!");
+    private JComboBox<String> sortingAlgorithms = new JComboBox<String>();
+    private JTextField delay = new JTextField();
+    private JTextField columnCount = new JTextField();
+    
     public Panel(int width, int height) {
 	this.preferedSize = new Dimension(width, height);
 	this.width = width;
 	this.height = height - 50;
 
 	addListener();
-
+	
 	resizeComponents();
 	addComponents();
     }
@@ -53,7 +54,7 @@ public class Panel extends JPanel {
 	int columnsCount = Settings.getInstance().getColumnsCount();
 	Column[] columns = new Column[columnsCount];
 	for (int i = 0; i < columnsCount; i++) {
-	    columns[i] = new Column(i, Math.random() * 100.1d, Color.RED);
+	    columns[i] = new Column(Math.random() * 100.1d, Color.RED);
 	}
 	Column.setColumns(columns);
     }
@@ -70,9 +71,15 @@ public class Panel extends JPanel {
 	Column[] columns = Column.getColumns();
 	for (int i = 0; i < columns.length; i++) {
 	    g.setColor(columns[i].getColor());
-	    g.fill3DRect((int) (columns[i].getX() * columnsWidth), 50, (int) columnsWidth,
+	    g.fill3DRect((int) (i * columnsWidth), 50, (int) columnsWidth,
 		    (int) (columns[i].getPercentageHeight() * (height / (float) 100)), true);
 	}
+    }
+
+    public void finished() {
+	setComponentsEnabled(true);
+	sort.setText("Sort!");
+	isSorting = false;
     }
 
     private void addListener() {
@@ -81,6 +88,7 @@ public class Panel extends JPanel {
 	    public void componentResized(ComponentEvent e) {
 		width = getWidth();
 		height = getHeight() - 50;
+		repaint();
 		resizeComponents();
 	    }
 	});
@@ -109,47 +117,66 @@ public class Panel extends JPanel {
 	    }
 	});
 	add(randomiseHeight);
-	
+
 	sortingAlgorithms.setToolTipText("Sorting algorithms");
 	sortingAlgorithms.setModel(new DefaultComboBoxModel<String>(settings.getSortingAlgorithms()));
 	add(sortingAlgorithms);
-	
+
 	delay.setText(settings.getDelay() + "");
 	delay.setToolTipText("Delay between every action");
 	delay.setBorder(BorderFactory.createTitledBorder("Delay"));
 	delay.addKeyListener(new KeyAdapter() {
 	    @Override
-	    public void keyTyped(KeyEvent event) {		
-		if (!Character.isDigit(event.getKeyChar())) {
+	    public void keyTyped(KeyEvent event) {
+		if (!Character.isDigit(event.getKeyChar()) || delay.getText().length() > 5) {
 		    event.consume();
 		}
+		EventQueue.invokeLater(new Runnable() {
+		    @Override
+		    public void run() {
+			String delayText = delay.getText();
+			settings.setDelay(delayText.isEmpty() ? 0 : Integer.parseInt(delayText));
+			if(sorter != null) {
+			    sorter.interrupt();
+			}
+		    }
+		});
 	    }
 	});
 	add(delay);
-	
+
 	columnCount.setText(settings.getColumnsCount() + "");
 	columnCount.setToolTipText("Number of columns");
 	columnCount.setBorder(BorderFactory.createTitledBorder("Columns"));
 	columnCount.addKeyListener(new KeyAdapter() {
 	    @Override
 	    public void keyTyped(KeyEvent event) {
-		if (!Character.isDigit(event.getKeyChar())) {
+		if (!Character.isDigit(event.getKeyChar()) || columnCount.getText().length() > 5) {
 		    event.consume();
 		}
+		EventQueue.invokeLater(new Runnable() {
+		    @Override
+		    public void run() {
+			String columnText = columnCount.getText();
+			int columns = columnText.isEmpty() ? 0 : Integer.parseInt(columnText);
+			settings.setColumnsCount(columns == 0 ? 1 : columns);
+			randomizeColumns();
+			repaint();
+		    }
+		});
 	    }
 	});
 	add(columnCount);
-	
+
 	sort.addActionListener(new ActionListener() {
 	    @Override
 	    public void actionPerformed(ActionEvent e) {
 		if (isSorting) {
-		    isSorting = false;
 		    sorter.kill();
-		    setComponentsEnabled(true);
+		    finished();
 		} else {
+		    sorter = null;
 		    isSorting = true;
-		    setComponentsEnabled(false);
 
 		    switch ((String) sortingAlgorithms.getSelectedItem()) {
 		    case "Bubble Sort":
@@ -165,11 +192,14 @@ public class Panel extends JPanel {
 			sorter = new Sort();
 			break;
 		    default:
-			setComponentsEnabled(true);
 			return;
 		    }
 
-		    sorter.start();
+		    if (sorter != null) {
+			setComponentsEnabled(false);
+			sort.setText("Cancel");
+			sorter.start();
+		    }
 		}
 	    }
 	});

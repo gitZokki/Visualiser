@@ -2,8 +2,6 @@ package de.zokki.visualiser.Sorting;
 
 import java.awt.Color;
 
-import de.zokki.visualiser.GUI.Column;
-
 public class InsertionSort extends AbstractSorter {
 
     public InsertionSort() {
@@ -24,10 +22,8 @@ public class InsertionSort extends AbstractSorter {
 	    columns[j].setColor(Color.BLACK);
 
 	    columns[j].setPercentageHeight(tempPercentage);
-	    for (Column column : columns) {
-		column.setColor(Color.RED);
-	    }
-	    Column.setColumns(columns);
+	    resetColor();
 	}
+	finished();
     }
 }

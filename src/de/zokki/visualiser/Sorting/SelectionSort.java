@@ -2,8 +2,6 @@ package de.zokki.visualiser.Sorting;
 
 import java.awt.Color;
 
-import de.zokki.visualiser.GUI.Column;
-
 public class SelectionSort extends AbstractSorter {
 
     public SelectionSort() {
@@ -22,12 +20,12 @@ public class SelectionSort extends AbstractSorter {
 		}
 		sleep();
 		columns[j].setColor(Color.RED);
-		Column.setColumns(columns);
 	    }
 	    swap(i, swapIndex);
 
 	    columns[i].setColor(Color.RED);
 	}
+	finished();
     }
 
 }

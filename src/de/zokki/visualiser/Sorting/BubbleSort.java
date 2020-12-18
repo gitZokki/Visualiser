@@ -2,8 +2,6 @@ package de.zokki.visualiser.Sorting;
 
 import java.awt.Color;
 
-import de.zokki.visualiser.GUI.Column;
-
 public class BubbleSort extends AbstractSorter {
 
     public BubbleSort() {
@@ -30,10 +28,10 @@ public class BubbleSort extends AbstractSorter {
 		sleep();
 		columns[i].setColor(Color.RED);
 		columns[i + 1].setColor(Color.RED);
-		Column.setColumns(columns);
 	    }
 	    columns[n].setColor(Color.RED);
 	    n++;
 	} while (swapped);
+	finished();
     }
 }

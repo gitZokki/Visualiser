@@ -1,52 +1,60 @@
 package de.zokki.visualiser.GUI;
 
 import java.awt.Dimension;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
 
 import javax.swing.JFrame;
 
-import de.zokki.visualiser.Utils.Settings;
-
 public class GUI extends JFrame {
 
     private static final long serialVersionUID = 1L;
 
-    Panel panel;
+    private Panel panel;
 
     public GUI(String name, int width, int height) {
 	super(name);
 	setMinimumSize(new Dimension(width, height));
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	setLayout(null);
+	setFocusable(true);
 
 	panel = new Panel(width, height);
-	Settings.getInstance().panel = panel;
 	setContentPane(panel);
 	pack();
 	setVisible(true);
 
-	
 	addWindowStateListener(new WindowStateListener() {
 	    @Override
 	    public void windowStateChanged(WindowEvent e) {
 		if (e.getNewState() == JFrame.MAXIMIZED_BOTH) {
-		    setExtendedState(JFrame.MAXIMIZED_BOTH);
+		    setFullScreen();
+		}
+	    }
+	});
+
+	addKeyListener(new KeyAdapter() {
+	    @Override
+	    public void keyPressed(KeyEvent e) {
+		if (getExtendedState() == JFrame.MAXIMIZED_BOTH && e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+		    setSize(width, height);
 		    dispose();
-		    setUndecorated(true);
+		    setUndecorated(false);
 		    setVisible(true);
+		} else if (getExtendedState() != JFrame.MAXIMIZED_BOTH && e.getKeyCode() == KeyEvent.VK_F11) {
+		    setFullScreen();
 		}
 	    }
 	});
 
 	panel.randomizeColumns();
-	initSorter();
     }
 
-    private void initSorter() {
-//	new BubbleSort().sort();
-//	new InsertionSort().sort();
-//	new SelectionSort().sort();
-//	new Sort().sort();
+    private void setFullScreen() {
+	setExtendedState(JFrame.MAXIMIZED_BOTH);
+	dispose();
+	setUndecorated(true);
+	setVisible(true);
     }
 }

@@ -1,15 +1,11 @@
 package de.zokki.visualiser.Utils;
 
-import de.zokki.visualiser.GUI.Panel;
-
 public class Settings {
 
     private static Settings instance;
     
-    private int columnsCount = 100;
+    private int columnsCount = 50;
     private int delay = 25;
-    
-    public Panel panel;
     
     private Settings() {
     }

@@ -3,8 +3,6 @@ package de.zokki.visualiser.GUI;
 import java.awt.Color;
 
 public class Column {
-
-    private int x;
     
     private double percentageHeight;
     
@@ -12,20 +10,11 @@ public class Column {
     
     private static Column[] columns;
     
-    public Column(int x, double percentageHeight, Color color) {
-	setX(x);
+    public Column(double percentageHeight, Color color) {
 	setPercentageHeight(percentageHeight);
 	setColor(color);
     }
     
-    public int getX() {
-        return x;
-    }
-    
-    public void setX(int x) {
-        this.x = x;
-    }
-
     public double getPercentageHeight() {
         return percentageHeight;
     }
