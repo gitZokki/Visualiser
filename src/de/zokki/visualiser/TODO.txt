@@ -1,7 +1,7 @@
-speed - slider?								-
-different sorting algorythmen				-
+speed - slider?								- done
+different sorting algorythmen				- 
 resize able 								- done
 colors										-
-columsCount									- 
+columsCount									- done
 left/right
 top/button

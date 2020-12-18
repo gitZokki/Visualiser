@@ -35,7 +35,7 @@ public class Settings {
     
     public String[] getSortingAlgorithms() {
 	return new String[] {
-		"Bubble Sort", "Insertion Sort", "Selection Sort", "Sort"
+		"Bubble Sort", "Insertion Sort", "Selection Sort", "Sort", "Merge Sort"
 	};
     }
 }

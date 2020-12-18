@@ -21,6 +21,7 @@ import javax.swing.JTextField;
 import de.zokki.visualiser.Sorting.AbstractSorter;
 import de.zokki.visualiser.Sorting.BubbleSort;
 import de.zokki.visualiser.Sorting.InsertionSort;
+import de.zokki.visualiser.Sorting.MergeSort;
 import de.zokki.visualiser.Sorting.SelectionSort;
 import de.zokki.visualiser.Sorting.Sort;
 import de.zokki.visualiser.Utils.Settings;
@@ -190,6 +191,9 @@ public class Panel extends JPanel {
 			break;
 		    case "Sort":
 			sorter = new Sort();
+			break;
+		    case "Merge Sort":
+			sorter = new MergeSort();
 			break;
 		    default:
 			return;
