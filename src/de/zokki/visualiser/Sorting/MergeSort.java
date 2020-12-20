@@ -1,8 +1,6 @@
 package de.zokki.visualiser.Sorting;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import de.zokki.visualiser.GUI.Column;
 
@@ -14,73 +12,41 @@ public class MergeSort extends AbstractSorter {
 
     @Override
     public void run() {
-	Column.setColumns(sort(Arrays.asList(columns)).toArray(new Column[columns.length]));
+	sort(columns);
 	finished();
     }
 
-//	funktion mergesort(liste);
-    private List<Column> sort(List<Column> columns) {
-	//System.out.println(columns.size());
-//	  falls (Größe von liste <= 1) dann antworte liste
-	if (columns.size() <= 1) {
-	    return columns;
-//	  sonst
-	} else {
-//	     halbiere die liste in linkeListe, rechteListe
-	    List<Column> left = new ArrayList<Column>();
-	    List<Column> right = new ArrayList<Column>();
-	    for (int i = 0; i < columns.size(); i++) {
-		if(i < columns.size() / 2) {
-		    left.add(columns.get(i));
-		} else {
-		    right.add(columns.get(i));
-		}
-	    }
-//	     linkeListe = mergesort(linkeListe)
+    Column[] sort(Column[] arr) {
+	int size = arr.length;
+	if (size > 1) {
+	    int mid = size / 2;
+	    Column[] left = Arrays.copyOfRange(arr, 0, mid);
 	    left = sort(left);
-	    Column.setColumns(columns.toArray(new Column[columns.size()]));
-//	     rechteListe = mergesort(rechteListe)
+	    Column[] right = Arrays.copyOfRange(arr, mid, size);
 	    right = sort(right);
-	    Column.setColumns(columns.toArray(new Column[columns.size()]));
-//	     antworte merge(linkeListe, rechteListe)
-	    return merge(left, right);
+	    arr = merge(left, right);
 	}
+	return arr;
     }
 
-//	funktion merge(linkeListe, rechteListe);
-    private List<Column> merge(List<Column> left, List<Column> right) {
-//	  neueListe
-	List<Column> sorted = new ArrayList<Column>();
-//	  solange (linkeListe und rechteListe nicht leer)
-	while (!left.isEmpty() && !right.isEmpty()) {
-	    sleep();
-//	  |    falls (erstes Element der linkeListe <= erstes Element der rechteListe)
-	    if (left.get(0).getPercentageHeight() <= right.get(0).getPercentageHeight()) {
-//	  |    dann füge erstes Element linkeListe in die neueListe hinten ein und entferne es aus linkeListe
-		sorted.add(left.get(0));
-		left.remove(0);
+    Column[] merge(Column[] left, Column[] right) {
+	int leftSize = left.length;
+	int rightSize = right.length;
+	Column[] arr = new Column[leftSize + rightSize];
+	int i = 0, leftIndex = 0, rightIndex = 0;
+	while (leftIndex < leftSize && rightIndex < rightSize) {
+	    if (left[leftIndex].getPercentageHeight() < right[rightIndex].getPercentageHeight()) {
+		arr[i++] = left[leftIndex++];
 	    } else {
-//	  |    sonst füge erstes Element rechteListe in die neueListe hinten ein und entferne es aus rechteListe
-		sorted.add(right.get(0));
-		right.remove(0);
+		arr[i++] = right[rightIndex++];
 	    }
-//	  solange_ende
 	}
-//	  solange (linkeListe nicht leer)
-	while (!left.isEmpty()) {
-//	  |    füge erstes Element linkeListe in die neueListe hinten ein und entferne es aus linkeListe
-	    sorted.add(left.get(0));
-	    left.remove(0);
-//	  solange_ende
+	while (leftIndex < leftSize) {
+	    arr[i++] = left[leftIndex++];
 	}
-//	  solange (rechteListe nicht leer)
-	while (!right.isEmpty()) {
-//	  |    füge erstes Element rechteListe in die neueListe hinten ein und entferne es aus rechteListe
-	    sorted.add(right.get(0));
-	    right.remove(0);
-//	  solange_ende
+	while (rightIndex < rightSize) {
+	    arr[i++] = right[rightIndex++];
 	}
-//	  antworte neueListe
-	return sorted;
+	return arr;
     }
 }
