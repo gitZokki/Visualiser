@@ -1,6 +1,7 @@
 package de.zokki.visualiser.Utils;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 public class Column {
     
@@ -8,7 +9,7 @@ public class Column {
     
     private Color color;
     
-    private static Column[] columns;
+    private static ArrayList<Column> columns;
     
     public Column(double percentageHeight, Color color) {
 	setPercentageHeight(percentageHeight);
@@ -31,11 +32,12 @@ public class Column {
 	this.color = color;
     }
 
-    public static Column[] getColumns() {
+    public static ArrayList<Column> getColumns() {
         return columns;
     }
 
-    public static void setColumns(Column[] columns) {
+    public static void setColumns(ArrayList<Column> columns) {
+	columns.trimToSize();
         Column.columns = columns;
     }
 }

@@ -3,6 +3,7 @@ package de.zokki.visualiser.Sorting;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Window;
+import java.util.ArrayList;
 
 import javax.swing.JRootPane;
 
@@ -12,9 +13,9 @@ import de.zokki.visualiser.Utils.Settings;
 
 public class AbstractSorter extends Thread {
 
-    protected Column[] columns;
+    protected ArrayList<Column> columns;
 
-    private Panel panel;
+    protected Panel panel;
     
     protected AbstractSorter() {
 	columns = Column.getColumns();
@@ -32,9 +33,9 @@ public class AbstractSorter extends Thread {
     }
 
     protected void swap(int i, int j) {
-	double tempPercentage = columns[j].getPercentageHeight();
-	columns[j].setPercentageHeight(columns[i].getPercentageHeight());
-	columns[i].setPercentageHeight(tempPercentage);
+	double tempPercentage = columns.get(j).getPercentageHeight();
+	columns.get(j).setPercentageHeight(columns.get(i).getPercentageHeight());
+	columns.get(i).setPercentageHeight(tempPercentage);
     }
 
     @SuppressWarnings("deprecation")

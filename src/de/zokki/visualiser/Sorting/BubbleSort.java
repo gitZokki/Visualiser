@@ -2,6 +2,8 @@ package de.zokki.visualiser.Sorting;
 
 import java.awt.Color;
 
+import de.zokki.visualiser.Utils.Column;
+
 public class BubbleSort extends AbstractSorter {
 
     public BubbleSort() {
@@ -15,21 +17,23 @@ public class BubbleSort extends AbstractSorter {
 	int n = 0;
 	do {
 	    swapped = false;
-	    columns[n].setColor(nColor);
-	    for (int i = columns.length - 2; i >= n; i--) {
-		columns[i].setColor(Color.BLACK);
-		columns[i + 1].setColor(Color.BLUE);
-		if (columns[i].getPercentageHeight() > columns[i + 1].getPercentageHeight()) {
+	    columns.get(n).setColor(nColor);
+	    for (int i = columns.size() - 2; i >= n; i--) {
+		Column black = columns.get(i);
+		Column blue = columns.get(i + 1);
+		black.setColor(Color.BLACK);
+		blue.setColor(Color.BLUE);
+		if (black.getPercentageHeight() > blue.getPercentageHeight()) {
 		    swap(i, i + 1);
 		    swapped = true;
-		    columns[i].setColor(Color.GREEN);
-		    columns[i + 1].setColor(Color.GREEN);
+		    black.setColor(Color.GREEN);
+		    blue.setColor(Color.GREEN);
 		}
 		sleep();
-		columns[i].setColor(Color.RED);
-		columns[i + 1].setColor(Color.RED);
+		black.setColor(Color.RED);
+		blue.setColor(Color.RED);
 	    }
-	    columns[n].setColor(Color.RED);
+	    columns.get(n).setColor(Color.RED);
 	    n++;
 	} while (swapped);
 	finished();

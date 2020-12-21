@@ -10,6 +10,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
@@ -21,6 +22,7 @@ import javax.swing.JTextField;
 import de.zokki.visualiser.Sorting.AbstractSorter;
 import de.zokki.visualiser.Sorting.BubbleSort;
 import de.zokki.visualiser.Sorting.InsertionSort;
+import de.zokki.visualiser.Sorting.MergeSort;
 import de.zokki.visualiser.Sorting.SelectionSort;
 import de.zokki.visualiser.Sorting.Sort;
 import de.zokki.visualiser.Utils.Column;
@@ -53,9 +55,9 @@ public class Panel extends JPanel {
 
     public void randomizeColumns() {
 	int columnsCount = Settings.getInstance().getColumnsCount();
-	Column[] columns = new Column[columnsCount];
+	ArrayList<Column> columns = new ArrayList<Column>();
 	for (int i = 0; i < columnsCount; i++) {
-	    columns[i] = new Column(Math.random() * 100.1d, Color.RED);
+	    columns.add(new Column(Math.random() * 100.1d, Color.RED));
 	}
 	Column.setColumns(columns);
     }
@@ -69,11 +71,11 @@ public class Panel extends JPanel {
     public void paintComponent(Graphics g) {
 	super.paintComponent(g);
 	double columnsWidth = width / (double) Settings.getInstance().getColumnsCount();
-	Column[] columns = Column.getColumns();
-	for (int i = 0; i < columns.length; i++) {
-	    g.setColor(columns[i].getColor());
+	ArrayList<Column> columns = Column.getColumns();
+	for (int i = 0; i < columns.size(); i++) {
+	    g.setColor(columns.get(i).getColor());
 	    g.fill3DRect((int) (i * columnsWidth), 50, (int) columnsWidth,
-		    (int) (columns[i].getPercentageHeight() * (height / (float) 100)), true);
+		    (int) (columns.get(i).getPercentageHeight() * (height / (float) 100)), true);
 	}
     }
 
@@ -189,6 +191,9 @@ public class Panel extends JPanel {
 			break;
 		    case "Sort":
 			sorter = new Sort();
+			break;
+		    case "Merge Sort":
+			sorter = new MergeSort();
 			break;
 		    default:
 			return;
