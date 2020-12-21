@@ -23,6 +23,7 @@ import de.zokki.visualiser.Sorting.BubbleSort;
 import de.zokki.visualiser.Sorting.InsertionSort;
 import de.zokki.visualiser.Sorting.SelectionSort;
 import de.zokki.visualiser.Sorting.Sort;
+import de.zokki.visualiser.Utils.Column;
 import de.zokki.visualiser.Utils.Settings;
 
 public class Panel extends JPanel {
@@ -38,14 +39,14 @@ public class Panel extends JPanel {
     private JComboBox<String> sortingAlgorithms = new JComboBox<String>();
     private JTextField delay = new JTextField();
     private JTextField columnCount = new JTextField();
-    
+
     public Panel(int width, int height) {
 	this.preferedSize = new Dimension(width, height);
 	this.width = width;
 	this.height = height - 50;
 
 	addListener();
-	
+
 	resizeComponents();
 	addComponents();
     }
@@ -128,15 +129,14 @@ public class Panel extends JPanel {
 	delay.addKeyListener(new KeyAdapter() {
 	    @Override
 	    public void keyTyped(KeyEvent event) {
-		if (!Character.isDigit(event.getKeyChar()) || delay.getText().length() > 5) {
-		    event.consume();
-		}
 		EventQueue.invokeLater(new Runnable() {
 		    @Override
 		    public void run() {
-			String delayText = delay.getText();
-			settings.setDelay(delayText.isEmpty() ? 0 : Integer.parseInt(delayText));
-			if(sorter != null) {
+			String text = delay.getText().replaceAll("[^0-9]*", "");
+			text = text.substring(0, text.length() >= 5 ? 5 : text.length());
+			delay.setText(text);
+			settings.setDelay(text.isEmpty() ? 0 : Integer.parseInt(text));
+			if (sorter != null) {
 			    sorter.interrupt();
 			}
 		    }
@@ -151,14 +151,13 @@ public class Panel extends JPanel {
 	columnCount.addKeyListener(new KeyAdapter() {
 	    @Override
 	    public void keyTyped(KeyEvent event) {
-		if (!Character.isDigit(event.getKeyChar()) || columnCount.getText().length() > 5) {
-		    event.consume();
-		}
 		EventQueue.invokeLater(new Runnable() {
 		    @Override
 		    public void run() {
-			String columnText = columnCount.getText();
-			int columns = columnText.isEmpty() ? 0 : Integer.parseInt(columnText);
+			String text = columnCount.getText().replaceAll("[^0-9]*", "");
+			text = text.substring(0, text.length() >= 5 ? 5 : text.length());
+			columnCount.setText(text);
+			int columns = text.isEmpty() ? 0 : Integer.parseInt(text);
 			settings.setColumnsCount(columns == 0 ? 1 : columns);
 			randomizeColumns();
 			repaint();

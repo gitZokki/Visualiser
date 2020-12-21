@@ -6,8 +6,8 @@ import java.awt.Window;
 
 import javax.swing.JRootPane;
 
-import de.zokki.visualiser.GUI.Column;
 import de.zokki.visualiser.GUI.Panel;
+import de.zokki.visualiser.Utils.Column;
 import de.zokki.visualiser.Utils.Settings;
 
 public class AbstractSorter extends Thread {

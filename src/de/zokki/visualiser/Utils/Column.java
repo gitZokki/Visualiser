@@ -1,4 +1,4 @@
-package de.zokki.visualiser.GUI;
+package de.zokki.visualiser.Utils;
 
 import java.awt.Color;
 
