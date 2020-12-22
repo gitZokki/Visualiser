@@ -31,7 +31,7 @@ public class MergeSort extends AbstractSorter {
     }
 
     private ArrayList<Column> merge(ArrayList<Column> left, ArrayList<Column> right) {
-	int start = columns.indexOf(left.get(0));
+	int index = columns.indexOf(left.get(0));
 	ArrayList<Column> sorted = new ArrayList<Column>();
 
 	while (!left.isEmpty() && !right.isEmpty()) {
@@ -52,9 +52,24 @@ public class MergeSort extends AbstractSorter {
 	    right.remove(0);
 	}
 
+	int finished = 0;
 	for (Column column : sorted) {
-	    columns.set(start++, column);
+	    int tempIndex = columns.indexOf(column);
+	    if (tempIndex == index) {
+		columns.get(index).setColor(movingColumn);
+	    } else {
+		columns.get(tempIndex).setColor(swappedColumn);
+		columns.get(index).setColor(swappedColumn);
+	    }
+
 	    sleep();
+	    swap(tempIndex, index++);
+
+	    if (sorted.size() == columns.size()) {
+		columns.get(finished).setColor(finisedColumn);
+	    }
+
+	    resetColor(finished++, index + sorted.size());
 	}
 
 	return sorted;

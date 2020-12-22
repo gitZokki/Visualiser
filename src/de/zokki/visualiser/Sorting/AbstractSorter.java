@@ -13,10 +13,16 @@ import de.zokki.visualiser.Utils.Settings;
 
 public class AbstractSorter extends Thread {
 
+    protected final Color standardColumn = Color.RED;
+    protected final Color movingColumn = Color.BLUE;
+    protected final Color standingColumn = Color.BLACK;
+    protected final Color swappedColumn = Color.CYAN;
+    protected final Color finisedColumn = Color.GREEN;
+
     protected ArrayList<Column> columns;
 
-    protected Panel panel;
-    
+    private Panel panel;
+
     protected AbstractSorter() {
 	columns = Column.getColumns();
 	panel = (Panel) ((Container) ((JRootPane) Window.getWindows()[0].getComponent(0)).getComponent(1))
@@ -33,9 +39,10 @@ public class AbstractSorter extends Thread {
     }
 
     protected void swap(int i, int j) {
-	double tempPercentage = columns.get(j).getPercentageHeight();
-	columns.get(j).setPercentageHeight(columns.get(i).getPercentageHeight());
-	columns.get(i).setPercentageHeight(tempPercentage);
+	Column tempPercentage = columns.get(j);
+	columns.set(j, columns.get(i));
+	columns.set(i, tempPercentage);
+	panel.repaint();
     }
 
     @SuppressWarnings("deprecation")
@@ -45,13 +52,21 @@ public class AbstractSorter extends Thread {
     }
 
     protected void finished() {
-	resetColor();
+	setColorOfColumns(finisedColumn, 0, columns.size());
 	panel.finished();
     }
 
     protected void resetColor() {
-	for (Column column : columns) {
-	    column.setColor(Color.RED);
+	setColorOfColumns(standardColumn, 0, columns.size());
+    }
+    
+    protected void resetColor(int start, int end) {
+	setColorOfColumns(standardColumn, start, Math.min(end, columns.size()));
+    }
+    
+    private void setColorOfColumns(Color color, int start, int end) {
+	for (int i = start; i < end; i++) {
+	    columns.get(i).setColor(color);
 	}
 	panel.repaint();
     }
