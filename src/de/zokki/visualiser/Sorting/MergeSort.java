@@ -52,7 +52,7 @@ public class MergeSort extends AbstractSorter {
 	    right.remove(0);
 	}
 
-	int finished = 0;
+	int finished = -1;
 	for (Column column : sorted) {
 	    int tempIndex = columns.indexOf(column);
 	    if (tempIndex == index) {
@@ -65,11 +65,11 @@ public class MergeSort extends AbstractSorter {
 	    sleep();
 	    swap(tempIndex, index++);
 
+	    resetColor(++finished, index + sorted.size());
+	    
 	    if (sorted.size() == columns.size()) {
 		columns.get(finished).setColor(finisedColumn);
 	    }
-
-	    resetColor(finished++, index + sorted.size());
 	}
 
 	return sorted;
