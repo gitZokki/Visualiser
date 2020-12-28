@@ -10,12 +10,14 @@ import java.awt.event.WindowStateListener;
 
 import javax.swing.JFrame;
 
+import de.zokki.visualiser.Utils.OSValidator;
+
 public class GUI extends JFrame {
 
     private static final long serialVersionUID = 1L;
 
     private boolean maxed = false;
-    
+
     private Panel panel;
 
     public GUI(String name, int width, int height) {
@@ -42,6 +44,7 @@ public class GUI extends JFrame {
 	    @Override
 	    public void keyPressed(KeyEvent e) {
 		if (maxed && e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+		    maxed = false;
 		    setSize(width, height);
 		    dispose();
 		    setUndecorated(false);
@@ -57,7 +60,14 @@ public class GUI extends JFrame {
 
     private void setFullScreen() {
 	maxed = true;
-	GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-	gd.setFullScreenWindow(this);
+	if (OSValidator.IS_UNIX) {
+	    GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+	    gd.setFullScreenWindow(this);
+	} else {
+	    setExtendedState(JFrame.MAXIMIZED_BOTH);
+	    dispose();
+	    setUndecorated(true);
+	    setVisible(true);
+	}
     }
 }
