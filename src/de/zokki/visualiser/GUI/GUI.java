@@ -76,7 +76,7 @@ public class GUI extends JFrame {
 	}
     }
     
-    public void setFullScreen() {
+    private void setFullScreen() {
 	if (OSValidator.IS_UNIX) {
 	    GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 	    gd.setFullScreenWindow(this);
