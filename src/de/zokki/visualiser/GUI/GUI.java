@@ -3,6 +3,9 @@ package de.zokki.visualiser.GUI;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
@@ -16,17 +19,17 @@ public class GUI extends JFrame {
 
     private static final long serialVersionUID = 1L;
 
-    private boolean maxed = false;
-
     private Panel panel;
 
+    private Rectangle bounds = getBounds();
+    
     public GUI(String name, int width, int height) {
 	super(name);
 	setMinimumSize(new Dimension(width, height));
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setFocusable(true);
 
-	panel = new Panel(width, height);
+	panel = new Panel(width, height, this);
 	setContentPane(panel);
 	pack();
 	setVisible(true);
@@ -34,32 +37,46 @@ public class GUI extends JFrame {
 	addWindowStateListener(new WindowStateListener() {
 	    @Override
 	    public void windowStateChanged(WindowEvent e) {
-		if (e.getNewState() == JFrame.MAXIMIZED_BOTH && !maxed) {
+		if (e.getNewState() == JFrame.MAXIMIZED_BOTH) {
 		    setFullScreen();
 		}
+	    }
+	});
+	
+	addComponentListener(new ComponentAdapter() {
+	    @Override
+	    public void componentResized(ComponentEvent e) {
+		setBounds();
+	    }
+
+	    @Override
+	    public void componentMoved(ComponentEvent e) {
+		setBounds();
 	    }
 	});
 
 	addKeyListener(new KeyAdapter() {
 	    @Override
 	    public void keyPressed(KeyEvent e) {
-		if (maxed && e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-		    maxed = false;
-		    setSize(width, height);
-		    dispose();
-		    setUndecorated(false);
-		    setVisible(true);
-		} else if (!maxed && e.getKeyCode() == KeyEvent.VK_F11) {
-		    setFullScreen();
-		}
+		setScreenSize(e.getKeyCode());
 	    }
 	});
 
 	panel.randomizeColumns();
     }
-
-    private void setFullScreen() {
-	maxed = true;
+    
+    public void setScreenSize(int e) {
+	if (getExtendedState() == JFrame.MAXIMIZED_BOTH && e == KeyEvent.VK_ESCAPE) {
+	    setBounds(bounds);
+	    dispose();
+	    setUndecorated(false);
+	    setVisible(true);
+	} else if (getExtendedState() != JFrame.MAXIMIZED_BOTH && e == KeyEvent.VK_F11) {
+	    setFullScreen();
+	}
+    }
+    
+    public void setFullScreen() {
 	if (OSValidator.IS_UNIX) {
 	    GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 	    gd.setFullScreenWindow(this);
@@ -68,6 +85,12 @@ public class GUI extends JFrame {
 	    dispose();
 	    setUndecorated(true);
 	    setVisible(true);
+	}
+    }
+    
+    private void setBounds() {
+	if (getExtendedState() != JFrame.MAXIMIZED_BOTH) {
+	    bounds = getBounds();
 	}
     }
 }
