@@ -1,12 +1,14 @@
 package de.zokki.visualiser.GUI;
 
+import java.awt.AWTEvent;
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.event.AWTEventListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
@@ -22,17 +24,36 @@ public class GUI extends JFrame {
     private Panel panel;
 
     private Rectangle bounds = getBounds();
-    
+
     public GUI(String name, int width, int height) {
 	super(name);
 	setMinimumSize(new Dimension(width, height));
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setFocusable(true);
 
-	panel = new Panel(width, height, this);
+	panel = new Panel(width, height);
 	setContentPane(panel);
 	pack();
 	setVisible(true);
+
+	addListeners();
+
+	panel.randomizeColumns();
+    }
+
+    private void addListeners() {
+	AWTEventListener listener = new AWTEventListener() {
+	    @Override
+	    public void eventDispatched(AWTEvent event) {
+		try {
+		    setScreenSize(((KeyEvent) event).getKeyCode());
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+	    }
+	};
+
+	Toolkit.getDefaultToolkit().addAWTEventListener(listener, AWTEvent.KEY_EVENT_MASK);
 
 	addWindowStateListener(new WindowStateListener() {
 	    @Override
@@ -42,7 +63,7 @@ public class GUI extends JFrame {
 		}
 	    }
 	});
-	
+
 	addComponentListener(new ComponentAdapter() {
 	    @Override
 	    public void componentResized(ComponentEvent e) {
@@ -54,18 +75,9 @@ public class GUI extends JFrame {
 		setBounds();
 	    }
 	});
-
-	addKeyListener(new KeyAdapter() {
-	    @Override
-	    public void keyPressed(KeyEvent e) {
-		setScreenSize(e.getKeyCode());
-	    }
-	});
-
-	panel.randomizeColumns();
     }
-    
-    public void setScreenSize(int e) {
+
+    private void setScreenSize(int e) {
 	if (getExtendedState() == JFrame.MAXIMIZED_BOTH && e == KeyEvent.VK_ESCAPE) {
 	    setBounds(bounds);
 	    dispose();
@@ -75,7 +87,7 @@ public class GUI extends JFrame {
 	    setFullScreen();
 	}
     }
-    
+
     private void setFullScreen() {
 	if (OSValidator.IS_UNIX) {
 	    GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
@@ -87,7 +99,7 @@ public class GUI extends JFrame {
 	    setVisible(true);
 	}
     }
-    
+
     private void setBounds() {
 	if (getExtendedState() != JFrame.MAXIMIZED_BOTH) {
 	    bounds = getBounds();

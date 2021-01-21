@@ -31,8 +31,6 @@ import de.zokki.visualiser.Utils.Settings;
 public class Panel extends JPanel {
 
     private static final long serialVersionUID = 1L;
-
-    private GUI gui;
     
     private Dimension preferedSize;
 
@@ -44,8 +42,7 @@ public class Panel extends JPanel {
     private JTextField delay = new JTextField();
     private JTextField columnCount = new JTextField();
 
-    public Panel(int width, int height, GUI gui) {
-	this.gui = gui;
+    public Panel(int width, int height) {
 	this.preferedSize = new Dimension(width, height);
 	this.width = width;
 	this.height = height - 50;
@@ -115,7 +112,6 @@ public class Panel extends JPanel {
     private void addComponents() {
 	Settings settings = Settings.getInstance();
 
-	randomiseHeight.setFocusable(false);
 	randomiseHeight.addActionListener(new ActionListener() {
 	    @Override
 	    public void actionPerformed(ActionEvent e) {
@@ -125,7 +121,6 @@ public class Panel extends JPanel {
 	});
 	add(randomiseHeight);
 
-	sortingAlgorithms.setFocusable(false);
 	sortingAlgorithms.setToolTipText("Sorting algorithms");
 	sortingAlgorithms.setModel(new DefaultComboBoxModel<String>(settings.getSortingAlgorithms()));
 	add(sortingAlgorithms);
@@ -134,10 +129,6 @@ public class Panel extends JPanel {
 	delay.setToolTipText("Delay between every action");
 	delay.setBorder(BorderFactory.createTitledBorder("Delay"));
 	delay.addKeyListener(new KeyAdapter() {
-	    @Override
-	    public void keyPressed(KeyEvent e) {
-		gui.setScreenSize(e.getKeyCode());
-	    }
 	    @Override
 	    public void keyTyped(KeyEvent event) {
 		EventQueue.invokeLater(new Runnable() {
@@ -161,10 +152,6 @@ public class Panel extends JPanel {
 	columnCount.setBorder(BorderFactory.createTitledBorder("Columns"));
 	columnCount.addKeyListener(new KeyAdapter() {
 	    @Override
-	    public void keyPressed(KeyEvent e) {
-		gui.setScreenSize(e.getKeyCode());
-	    }
-	    @Override
 	    public void keyTyped(KeyEvent event) {
 		EventQueue.invokeLater(new Runnable() {
 		    @Override
@@ -182,7 +169,6 @@ public class Panel extends JPanel {
 	});
 	add(columnCount);
 
-	sort.setFocusable(false);
 	sort.addActionListener(new ActionListener() {
 	    @Override
 	    public void actionPerformed(ActionEvent e) {
